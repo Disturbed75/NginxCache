@@ -1,0 +1,28 @@
+version: '3.6'
+
+services:
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-cache-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/cache:/opt/cache:rw
+      - ./nginx/modules:/etc/nginx/modules
+
+
+  nginx-cache-app:
+    container_name: nginx-cache-app-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nginx-cache:latest
+    depends_on:
+      - nginx
+    ports:
+      - '127.0.0.1:8081:8081'
+
+
